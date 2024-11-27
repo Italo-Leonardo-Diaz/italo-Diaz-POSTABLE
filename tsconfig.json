@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",                                // Especifica la versión de JavaScript para la salida
+    "module": "CommonJS",                           // Usa CommonJS como sistema de módulos (para Node.js)
+    "outDir": "./dist",                             // Directorio donde se compilará el código
+    "rootDir": "./src",                             // Directorio raíz donde están tus archivos fuente
+    "moduleResolution": "node",
+    "strict": true,                                 // Habilita todas las comprobaciones de tipo estrictas
+    "esModuleInterop": true,                        // Permite importar módulos CommonJS de una manera más amigable con ES Modules
+    "skipLibCheck": true,                           // Evita la verificación de bibliotecas para mejorar el rendimiento
+    "forceConsistentCasingInFileNames": true,       // Asegura que los nombres de los archivos sean consistentes
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+  "include": [
+    "src/**/*"                                      // Incluir todos los archivos en la carpeta `src`
+  ],
+  "exclude": [
+    "node_modules"                                  // Excluir la carpeta `node_modules`
+  ]
+}
