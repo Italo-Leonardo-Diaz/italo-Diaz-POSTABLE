@@ -6,13 +6,11 @@ import db from './config/db';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import winston, { transports, format } from 'winston';  // Usamos winston para mejorar los logs
+import winston, { transports, format } from 'winston';  
 import 'winston-daily-rotate-file';
 
-// Cargar variables de entorno
 dotenv.config();
 
-// Configuración de logs con Winston (incluye rotación de logs)
 const dailyRotateFileTransport = new transports.DailyRotateFile({
   filename: 'logs/server-%DATE%.log',
   datePattern: 'YYYY-MM-DD',
@@ -38,14 +36,11 @@ const logger = winston.createLogger({
   ],
 });
 
-// Crear instancia de la aplicación Express
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware para parsear el cuerpo de la solicitud como JSON
 app.use(express.json());
 
-// Configuración de CORS (permitiendo múltiples orígenes si es necesario)
 const corsOptions = {
   origin: (origin: string | undefined, callback: Function) => {
     if (!origin || origin === 'https://tudominio.com' || origin === 'https://otrodominio.com') {
@@ -59,13 +54,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Middleware de seguridad
 app.use(helmet());
 
-// Middleware para logs con Morgan
 app.use(morgan('combined', { stream: { write: (message) => logger.info(message.trim()) } }));
 
-// Middleware de validación de datos (ejemplo básico)
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (!req.body.username) {
     return res.status(400).json({ message: 'El nombre de usuario es requerido.' });
@@ -73,18 +65,16 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Rutas con control de versiones (V1)
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/auth', authRoutes);
 
-// Conexión a la base de datos con manejo de reconexión
 let attempts = 0;
-const maxAttempts = 5;  // Intentos máximos de reconexión
-const dbConnectionTimeout = 5000;  // Timeout entre reintentos
+const maxAttempts = 5;  
+const dbConnectionTimeout = 5000;  
 
 const connectDb = async () => {
   try {
-    await db.query('SELECT NOW()');  // Verifica si la base de datos está disponible
+    await db.query('SELECT NOW()');  
     logger.info('Conexión a la base de datos exitosa');
   } catch (err) {
     attempts += 1;
@@ -96,20 +86,17 @@ const connectDb = async () => {
 
     if (attempts < maxAttempts) {
       logger.info('Reintentando conexión a la base de datos...');
-      setTimeout(connectDb, dbConnectionTimeout); // Reintenta después de 5 segundos
+      setTimeout(connectDb, dbConnectionTimeout); 
     } else {
       logger.error('No se pudo conectar a la base de datos después de varios intentos.');
-      process.exit(1);  // Salir después de varios intentos fallidos
+      process.exit(1);  
     }
   }
 };
 
-// Intentamos conectar a la base de datos al iniciar el servidor
 connectDb();
 
-// Middleware de manejo de errores
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
-  // Manejo de errores específicos
   if (err instanceof Error && err.message.includes('ECONNREFUSED')) {
     logger.error('No se puede conectar a la base de datos');
     return res.status(500).json({
@@ -126,7 +113,6 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: 'Algo salió mal en el servidor.' });
 });
 
-// Iniciar el servidor
 app.listen(PORT, () => {
   logger.info(`Servidor corriendo en el puerto ${PORT}`);
 });
