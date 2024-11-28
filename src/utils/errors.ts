@@ -4,6 +4,6 @@ export class CustomError extends Error {
   constructor(message: string, code: string) {
     super(message);
     this.code = code;
-    this.name = this.constructor.name; // Usar el nombre de la clase de forma dinámica
+    this.name = this.constructor.name; 
   }
 }
