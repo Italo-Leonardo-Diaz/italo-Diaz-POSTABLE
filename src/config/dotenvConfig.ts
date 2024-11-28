@@ -1,9 +1,8 @@
 import dotenv from 'dotenv';
 
-dotenv.config(); // Carga las variables del archivo .env
+dotenv.config(); 
 
-// Verificar que las variables críticas estén definidas
-const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL']; // Ajuste para Render: usamos DATABASE_URL en lugar de múltiples variables
+const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL']; 
 
 requiredEnvVars.forEach((envVar) => {
   if (!process.env[envVar]) {
