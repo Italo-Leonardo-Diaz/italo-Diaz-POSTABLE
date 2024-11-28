@@ -10,9 +10,9 @@ export const loginSchema = z.object({
   password: z
     .string()
     .min(6, 'La contraseña debe tener al menos 6 caracteres.')
-    .max(128, 'La contraseña no puede tener más de 128 caracteres.') // Agregada longitud máxima
+    .max(128, 'La contraseña no puede tener más de 128 caracteres.') 
     .regex(/[A-Z]/, 'La contraseña debe contener al menos una letra mayúscula.')
-    .regex(/[a-z]/, 'La contraseña debe contener al menos una letra minúscula.') // Agregada validación de minúsculas
+    .regex(/[a-z]/, 'La contraseña debe contener al menos una letra minúscula.') 
     .regex(/[0-9]/, 'La contraseña debe contener al menos un número.')
     .regex(/[!@#$%^&*(),.?":{}|<>]/, 'La contraseña debe contener al menos un carácter especial.')
 });
