@@ -2,13 +2,11 @@ import pool from '../config/db';
 import bcrypt from 'bcrypt';
 import { CustomError } from '../utils/errors';
 
-// Validación de email
 const validateEmail = (email: string) => {
   const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   return regex.test(email);
 };
 
-// Crear un nuevo usuario
 export const createUser = async (
   username: string,
   password: string,
@@ -58,7 +56,6 @@ export const createUser = async (
   }
 };
 
-// Obtener un usuario por nombre de usuario
 export const getUserByUsername = async (username: string) => {
   try {
     const query = `SELECT * FROM users WHERE username = $1;`;
@@ -70,7 +67,6 @@ export const getUserByUsername = async (username: string) => {
   }
 };
 
-// Obtener un usuario por email
 export const getUserByEmail = async (email: string) => {
   try {
     const query = `SELECT * FROM users WHERE email = $1;`;
@@ -82,7 +78,6 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
-// Actualizar la contraseña de un usuario
 export const updateUserPassword = async (userId: string, newPassword: string) => {
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -101,7 +96,6 @@ export const updateUserPassword = async (userId: string, newPassword: string) =>
   }
 };
 
-// Eliminar un usuario
 export const deleteUser = async (userId: string) => {
   try {
     const query = `DELETE FROM users WHERE id = $1 RETURNING id;`;
