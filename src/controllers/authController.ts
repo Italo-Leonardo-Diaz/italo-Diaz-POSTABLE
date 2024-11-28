@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import Joi from 'joi';
 import { getUserByUsername } from '../models/userModel';
 
-// Esquema de validación para el login
 const loginSchema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required().messages({
     'string.base': 'El nombre de usuario debe ser una cadena de texto',
@@ -22,7 +21,6 @@ const loginSchema = Joi.object({
 
 export const login = async (req: Request, res: Response) => {
   try {
-    // Validación de los datos de entrada
     const { error } = loginSchema.validate(req.body, { abortEarly: false });
     if (error) {
       return res.status(400).json({
@@ -31,36 +29,30 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Desestructurar los datos de la solicitud
     const { username, password } = req.body;
 
-    // Verificar si el usuario existe en la base de datos
     const user = await getUserByUsername(username);
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
 
-    // Verificar la contraseña con bcrypt
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Contraseña incorrecta.' });
     }
 
-    // Verificar si JWT_SECRET está configurado
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
-      console.error('JWT_SECRET no está configurado.'); // Log útil para desarrollo
+      console.error('JWT_SECRET no está configurado.'); 
       return res.status(500).json({ message: 'Error del servidor. Falta configuración del token.' });
     }
 
-    // Generar un token JWT con id y role del usuario
     const token = jwt.sign(
       { id: user.id, role: user.role },
       jwtSecret,
-      { expiresIn: '1h', algorithm: 'HS256' } // Aseguramos el algoritmo de firma
+      { expiresIn: '1h', algorithm: 'HS256' } 
     );
 
-    // Responder con el token JWT
     return res.status(200).json({
       token,
       message: 'Inicio de sesión exitoso.',
