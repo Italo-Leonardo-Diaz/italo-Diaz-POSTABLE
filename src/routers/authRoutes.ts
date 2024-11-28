@@ -5,7 +5,6 @@ import { loginSchema } from '../schemas/authSchema';
 
 const router = Router();
 
-// Ruta de inicio de sesión con validación del esquema
 router.post('/login', validateSchema(loginSchema), login);
 
 export default router;
