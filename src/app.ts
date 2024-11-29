@@ -10,14 +10,14 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors()); 
+app.use(cors());
 
-app.use(express.json()); 
+app.use(express.json());
+
+app.use('/api/posts', postRoutes);
 
 app.post('/api/posts', validateSchema(postSchema)); 
 app.put('/api/posts/:id', validateSchema(postSchema)); 
-
-app.use('/api', postRoutes); 
 
 app.use(errorMiddleware);
 
